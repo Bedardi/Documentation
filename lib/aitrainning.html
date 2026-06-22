@@ -2,586 +2,108 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-  <title>MistaHub AI Studio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, interactive-widget=resizes-content">
+  <title>MistaHub AI Engine</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Premium Theme Variables */
-    :root { 
-      --bg-main: #131314; 
-      --bg-panel: #1e1f20; 
-      --bg-input: #282a2c;
-      --text-main: #e3e3e3; 
-      --text-muted: #c4c7c5; 
-      --accent: #a8c7fa; 
-      --bubble-user: #333537; 
-      --border-color: #333639;
-      --radius-lg: 24px;
-      --radius-xl: 32px;
-    }
+    :root { --bg: #131314; --panel: #1e1f20; --accent: #a8c7fa; --text: #e3e3e3; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; height: 100dvh; display: flex; flex-direction: column; }
     
-    [data-theme="light"] { 
-      --bg-main: #ffffff; --bg-panel: #f9fafb; --bg-input: #f3f4f6;
-      --text-main: #111827; --text-muted: #6b7280; --accent: #2563eb; 
-      --bubble-user: #e5e7eb; --border-color: #e5e7eb;
-    }
-
-    body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; margin: 0; transition: background-color 0.3s ease; }
+    /* Syntax Highlighting Mock */
+    .code-block { background: #000; border-radius: 12px; border: 1px solid #333; padding: 16px; margin-top: 10px; font-family: monospace; overflow-x: auto; color: #a8c7fa; }
+    .keyword { color: #f472b6; }
     
-    /* Animations */
-    @keyframes slideUpFade {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-msg { animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    
-    @keyframes modalPop {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    .animate-modal { animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-    /* Scrollbars */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
-    
-    /* Layout */
-    .app-screen { display: none; flex: 1; height: 100%; background: var(--bg-main); flex-direction: column; }
-    .app-screen.active { display: flex; }
-    
-    .sidebar { width: 280px; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: absolute; z-index: 40; background: var(--bg-panel); height: 100dvh; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; }
-    .sidebar.open { transform: translateX(0); }
-    @media (min-width: 768px) { .sidebar { position: static; transform: none; height: 100%; } }
-    
-    /* UI Components */
-    .chat-input-wrapper { background: var(--bg-input); border-radius: var(--radius-xl); border: 1px solid transparent; padding: 8px 16px; transition: border-color 0.2s; }
-    .chat-input-wrapper:focus-within { border-color: var(--border-color); }
-    
-    .chip { padding: 10px 20px; border-radius: var(--radius-xl); border: 1px solid var(--border-color); background: var(--bg-main); color: var(--text-main); font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-    .chip:hover { background: var(--bg-panel); transform: translateY(-1px); }
-    .chip:active { transform: scale(0.98); border-color: var(--accent); }
-    
-    .canvas-container { background: #000; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-color); position: relative; }
-    
-    .settings-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); opacity: 0; transition: opacity 0.3s; }
-    .settings-modal.active { display: flex; opacity: 1; }
-    .settings-content { background: var(--bg-panel); width: 90%; max-width: 420px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); }
-    
-    /* History Item styling */
-    .history-item { border-radius: 12px; transition: background-color 0.2s; }
-    .history-actions { opacity: 0; transition: opacity 0.2s; display: flex; gap: 4px; }
-    .history-item:hover .history-actions { opacity: 1; }
-    @media (max-width: 768px) { .history-actions { opacity: 1; } } /* Always show on mobile */
-
-    .btn-svg { color: var(--text-muted); transition: color 0.2s; cursor: pointer; padding: 4px; }
-    .btn-svg:hover { color: var(--text-main); }
-    
-    textarea { field-sizing: content; } /* Modern CSS for auto-expanding textareas if supported */
+    /* Tabs */
+    .tab-btn.active { border-bottom: 2px solid var(--accent); color: var(--accent); }
   </style>
 </head>
 <body>
 
-  <!-- ================= ONBOARDING ================= -->
-  <div id="screen-onboarding" class="app-screen justify-center items-center p-6">
-    <div class="w-full max-w-sm text-center animate-msg">
-      <div class="mx-auto bg-[var(--bg-panel)] w-16 h-16 rounded-3xl flex items-center justify-center mb-6 border border-[var(--border-color)] shadow-lg">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" class="text-[var(--accent)]"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <h1 class="text-3xl font-semibold mb-2 tracking-tight">AI Studio</h1>
-      <p class="text-[var(--text-muted)] mb-8 text-sm">Create your universal workspace.</p>
-      
-      <div class="space-y-4">
-        <input type="text" id="setupName" placeholder="Enter your name" class="w-full bg-[var(--bg-input)] text-[var(--text-main)] border border-[var(--border-color)] rounded-[var(--radius-xl)] px-6 py-4 outline-none focus:border-[var(--accent)] transition-colors">
-        <button onclick="saveOnboarding()" class="w-full bg-[var(--text-main)] text-[var(--bg-main)] font-semibold rounded-[var(--radius-xl)] px-6 py-4 hover:opacity-90 active:scale-95 transition-all">Get Started</button>
-      </div>
+<!-- Header -->
+<header class="h-14 flex items-center justify-between px-4 border-b border-[#333]">
+  <div class="font-bold tracking-tighter text-lg">MistaHub AI</div>
+  <div class="flex gap-2">
+    <button onclick="switchView('chat')" class="text-xs font-bold px-3 py-1 bg-[#282a2c] rounded-full">Chat</button>
+    <button onclick="switchView('code')" class="text-xs font-bold px-3 py-1 bg-[#282a2c] rounded-full">Workspace</button>
+  </div>
+</header>
+
+<!-- Main Container -->
+<main id="chat-view" class="flex-1 flex flex-col overflow-hidden">
+  <div id="chat-box" class="flex-1 overflow-y-auto p-4 space-y-6">
+    <div class="flex gap-4">
+      <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">AI</div>
+      <div class="text-sm pt-1">Hello! Main aapka Universal SEO Engine hoon. Aaj kya generate karein?</div>
     </div>
   </div>
-
-  <!-- ================= MAIN APP ================= -->
-  <div id="screen-main" class="app-screen flex-row">
-    
-    <!-- Sidebar -->
-    <div id="sidebar" class="sidebar shadow-2xl md:shadow-none">
-      <div class="p-4 flex justify-between items-center">
-        <button onclick="toggleSidebar()" class="md:hidden btn-svg"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-        <button onclick="toggleSettings()" class="btn-svg"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path></svg></button>
-      </div>
-      
-      <div class="px-3 pb-2">
-        <button onclick="startNewChat()" class="w-full flex items-center justify-between bg-[var(--bg-input)] hover:bg-[var(--border-color)] text-[var(--text-main)] font-medium text-sm px-4 py-3 rounded-2xl transition-colors">
-          <span class="flex items-center gap-2">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            New Chat
-          </span>
-        </button>
-      </div>
-
-      <!-- History List -->
-      <div id="history-list" class="flex-1 overflow-y-auto px-3 py-2 space-y-1"></div>
-
-      <!-- User Profile Bottom -->
-      <div class="p-4 border-t border-[var(--border-color)] flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full bg-[var(--accent)] text-black flex items-center justify-center font-bold text-sm" id="avatar-initial">U</div>
-        <span id="display-user-name" class="font-medium text-sm truncate flex-1">User</span>
-      </div>
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col relative h-full">
-      
-      <!-- Header -->
-      <header class="h-14 flex items-center justify-between px-4 z-10 shrink-0 sticky top-0 bg-[var(--bg-main)]/80 backdrop-blur-md">
-        <div class="flex items-center gap-3">
-          <button onclick="toggleSidebar()" class="btn-svg p-1 md:hidden"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
-          <h2 id="current-chat-title" class="font-medium text-[15px]">New Session</h2>
-        </div>
-        <div class="flex gap-2">
-          <button onclick="toggleCodePanel()" class="lg:hidden flex items-center gap-2 bg-[var(--bg-panel)] px-4 py-1.5 rounded-full text-xs font-medium border border-[var(--border-color)]">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> Code
-          </button>
-        </div>
-      </header>
-
-      <!-- Chat Box -->
-      <div id="chat-box" class="flex-1 overflow-y-auto px-4 lg:px-24 xl:px-48 pt-4 pb-6 space-y-8"></div>
-
-      <!-- Input Area -->
-      <div class="shrink-0 flex flex-col bg-gradient-to-t from-[var(--bg-main)] via-[var(--bg-main)] to-transparent pt-4">
-        <!-- Suggestions Chips -->
-        <div id="suggestion-box" class="flex gap-2 overflow-x-auto px-4 lg:px-24 xl:px-48 pb-3 hide-scrollbar"></div>
-        
-        <!-- Input Bar -->
-        <div class="px-4 lg:px-24 xl:px-48 pb-6">
-          <div class="chat-input-wrapper flex items-end">
-            <textarea id="chatInput" rows="1" class="flex-1 bg-transparent text-[var(--text-main)] px-2 py-2 text-[15px] outline-none resize-none max-h-32 leading-relaxed placeholder-[var(--text-muted)]" placeholder="Message AI Studio..." onkeypress="handleEnter(event)"></textarea>
-            <button onclick="sendMessage()" class="p-2 mb-0.5 rounded-full bg-[var(--text-main)] text-[var(--bg-main)] hover:opacity-80 active:scale-90 transition-all shrink-0">
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-            </button>
-          </div>
-          <p class="text-center text-[10px] text-[var(--text-muted)] mt-3">AI Studio can make mistakes. Verify important code.</p>
-        </div>
-      </div>
-
-      <!-- Mobile Code Modal -->
-      <div id="mobile-code-overlay" class="absolute inset-0 bg-[var(--bg-main)] z-30 hidden flex-col lg:hidden animate-modal">
-        <header class="h-14 flex items-center justify-between px-4 border-b border-[var(--border-color)]">
-          <h2 class="font-medium text-sm flex items-center gap-2"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> Editor Preview</h2>
-          <button onclick="toggleCodePanel()" class="btn-svg"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-        </header>
-        <div id="mobile-editor-container" class="flex-1 overflow-y-auto flex flex-col p-4 gap-4"></div>
-      </div>
-    </div>
-
-    <!-- Right Panel (Desktop Editor) -->
-    <div id="code-panel" class="hidden lg:flex w-[40%] max-w-[500px] border-l border-[var(--border-color)] bg-[var(--bg-panel)] flex-col">
-      <header class="h-14 flex items-center justify-between px-6 border-b border-[var(--border-color)]">
-        <h2 class="font-medium text-sm flex items-center gap-2 text-[var(--text-main)]">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg> Workspace
-        </h2>
-        <button onclick="copyCode()" class="text-xs bg-[var(--bg-input)] hover:bg-[var(--border-color)] px-3 py-1.5 rounded-full font-medium transition-colors border border-[var(--border-color)] flex items-center gap-1">
-          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy
-        </button>
-      </header>
-      
-      <div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6" id="desktop-editor-container">
-        <div class="relative group">
-          <textarea id="desktopEditor" class="w-full h-64 bg-[var(--bg-main)] text-[var(--accent)] font-mono text-[13px] p-5 rounded-[var(--radius-lg)] border border-[var(--border-color)] outline-none resize-none leading-relaxed" spellcheck="false" placeholder="/* Generated configurations will appear here... */"></textarea>
-        </div>
-        
-        <!-- OG Canvas Area -->
-        <div id="canvas-wrapper" class="hidden flex-col gap-3">
-          <div class="flex justify-between items-center">
-            <h3 class="text-sm font-medium text-[var(--text-main)]">Preview Banner</h3>
-            <div class="flex gap-2">
-               <button onclick="regenerateCanvas()" class="btn-svg text-xs flex items-center gap-1" title="Regenerate Layout"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></button>
-               <button onclick="downloadCanvas()" class="text-xs bg-[var(--text-main)] text-[var(--bg-main)] px-3 py-1.5 rounded-full font-semibold hover:opacity-90 transition-opacity flex items-center gap-1">
-                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Download
-               </button>
-            </div>
-          </div>
-          <div class="canvas-container shadow-2xl">
-            <canvas id="ogCanvas" width="1200" height="630"></canvas>
-          </div>
-        </div>
-      </div>
+  
+  <div class="p-4 border-t border-[#333]">
+    <div class="flex items-center bg-[#1e1f20] rounded-2xl p-2 border border-[#333]">
+      <textarea id="chatInput" rows="1" class="flex-1 bg-transparent px-3 outline-none text-sm" placeholder="Ask anything..."></textarea>
+      <button onclick="send()" class="bg-white text-black p-2 rounded-full font-bold text-sm">➤</button>
     </div>
   </div>
+</main>
 
-  <!-- ================= SETTINGS MODAL ================= -->
-  <div id="settings-modal" class="settings-modal">
-    <div class="settings-content p-6 animate-modal">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-lg font-semibold">Settings</h2>
-        <button onclick="toggleSettings()" class="btn-svg"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-      </div>
-      
-      <div class="space-y-6">
-        <div>
-          <label class="block text-xs font-medium text-[var(--text-muted)] mb-2 uppercase tracking-wider">Profile Name</label>
-          <div class="flex gap-2">
-            <input type="text" id="setting-name" class="flex-1 bg-[var(--bg-input)] text-[var(--text-main)] border border-[var(--border-color)] rounded-xl px-4 py-2.5 outline-none text-sm">
-            <button onclick="updateProfile()" class="bg-[var(--text-main)] text-[var(--bg-main)] px-4 rounded-xl text-sm font-medium">Save</button>
-          </div>
-        </div>
-        
-        <div>
-          <label class="block text-xs font-medium text-[var(--text-muted)] mb-2 uppercase tracking-wider">Appearance</label>
-          <div class="grid grid-cols-2 gap-3">
-            <button onclick="setTheme('dark')" class="p-3 bg-[#131314] text-white rounded-xl border border-[var(--border-color)] hover:border-gray-500 transition-colors text-sm font-medium">Dark</button>
-            <button onclick="setTheme('light')" class="p-3 bg-[#f3f4f6] text-black rounded-xl border border-[var(--border-color)] hover:border-gray-400 transition-colors text-sm font-medium">Light</button>
-          </div>
-        </div>
-      </div>
-    </div>
+<!-- Code Workspace -->
+<main id="code-view" class="flex-1 hidden flex-col">
+  <div class="flex border-b border-[#333]">
+    <button onclick="setTab('meta')" class="tab-btn active px-4 py-3 text-xs font-bold">META TAGS</button>
+    <button onclick="setTab('robots')" class="tab-btn px-4 py-3 text-xs font-bold">ROBOTS</button>
+    <button onclick="setTab('sitemap')" class="tab-btn px-4 py-3 text-xs font-bold">SITEMAP</button>
   </div>
+  <textarea id="editor" class="flex-1 bg-[#000] text-emerald-400 p-6 font-mono text-sm outline-none"></textarea>
+</main>
 
-  <script>
-    // ==========================================
-    // 1. INDEXED DB (Universal DB)
-    // ==========================================
-    let db; const dbName = "Gemini_SEO_DB";
-    let user = null; let currentSession = null;
+<script>
+  let state = { domain: '', title: '', step: 'init' };
+  
+  function switchView(v) {
+    document.getElementById('chat-view').classList.toggle('hidden', v !== 'chat');
+    document.getElementById('code-view').classList.toggle('hidden', v !== 'code');
+  }
 
-    function initDB() {
-      return new Promise((resolve, reject) => {
-        const req = indexedDB.open(dbName, 1);
-        req.onupgradeneeded = (e) => {
-          db = e.target.result;
-          if (!db.objectStoreNames.contains('user')) db.createObjectStore('user', { keyPath: 'id' });
-          if (!db.objectStoreNames.contains('chats')) db.createObjectStore('chats', { keyPath: 'id' });
-        };
-        req.onsuccess = (e) => { db = e.target.result; resolve(); };
-        req.onerror = (e) => reject(e);
-      });
-    }
-    async function saveToDB(storeName, data) { return new Promise(r => { const tx = db.transaction(storeName, 'readwrite'); tx.objectStore(storeName).put(data); tx.oncomplete = () => r(); }); }
-    async function getFromDB(storeName, id) { return new Promise(r => { const tx = db.transaction(storeName, 'readonly'); const req = tx.objectStore(storeName).get(id); req.onsuccess = () => r(req.result); }); }
-    async function getAllChats() { return new Promise(r => { const tx = db.transaction('chats', 'readonly'); const req = tx.objectStore('chats').getAll(); req.onsuccess = () => r(req.result); }); }
-    async function deleteFromDB(id) { return new Promise(r => { const tx = db.transaction('chats', 'readwrite'); tx.objectStore('chats').delete(id); tx.oncomplete = () => r(); }); }
+  function setTab(t) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    // Logic to switch content in editor here
+  }
 
-    // ==========================================
-    // 2. INITIALIZATION & UI STATES
-    // ==========================================
-    async function bootApp() {
-      await initDB();
-      user = await getFromDB('user', 'profile');
-      if (!user) { document.getElementById('screen-onboarding').classList.add('active'); } 
-      else { 
-        applyTheme(user.theme || 'dark');
-        updateUserUI();
-        document.getElementById('screen-main').classList.add('active');
-        await renderSidebar(); startNewChat(); 
-      }
-      
-      // Clone Editor for Mobile View
-      document.getElementById('mobile-editor-container').innerHTML = document.getElementById('desktop-editor-container').innerHTML;
-      
-      // Auto-resize textarea
-      const tx = document.getElementById('chatInput');
-      tx.addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
-      });
-    }
+  function addCodeBlock(lang, code) {
+    const box = document.getElementById('chat-box');
+    const div = document.createElement('div');
+    div.className = 'code-block';
+    div.innerHTML = `<div class="text-xs mb-2 text-gray-500 font-bold uppercase">${lang}</div><code>${code.replace(/</g, '&lt;')}</code>`;
+    box.appendChild(div);
+    scrollToBottom();
+  }
 
-    async function saveOnboarding() {
-      const name = document.getElementById('setupName').value.trim() || 'Guest';
-      user = { id: 'profile', name: name, theme: 'dark' };
-      await saveToDB('user', user);
-      document.getElementById('screen-onboarding').classList.remove('active');
-      bootApp();
-    }
-
-    function updateUserUI() {
-      document.getElementById('display-user-name').innerText = user.name;
-      document.getElementById('avatar-initial').innerText = user.name.charAt(0).toUpperCase();
-      document.getElementById('setting-name').value = user.name;
-    }
-
-    function toggleSettings() { 
-      const modal = document.getElementById('settings-modal');
-      if(modal.classList.contains('active')) {
-        modal.classList.remove('active');
-        setTimeout(() => modal.style.display = 'none', 300);
-      } else {
-        modal.style.display = 'flex';
-        setTimeout(() => modal.classList.add('active'), 10);
-      }
-    }
+  function send() {
+    const input = document.getElementById('chatInput');
+    const txt = input.value;
+    if(!txt) return;
     
-    async function updateProfile() { user.name = document.getElementById('setting-name').value; await saveToDB('user', user); updateUserUI(); toggleSettings(); }
-    function setTheme(t) { applyTheme(t); user.theme = t; saveToDB('user', user); toggleSettings(); }
-    function applyTheme(t) { document.body.setAttribute('data-theme', t); }
-    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
-    function toggleCodePanel() { document.getElementById('mobile-code-overlay').classList.toggle('hidden'); document.getElementById('mobile-code-overlay').classList.toggle('flex'); }
-
-    // RENDER SIDEBAR (WITH CLEAN ICONS)
-    async function renderSidebar() {
-      const chats = await getAllChats();
-      const list = document.getElementById('history-list');
-      list.innerHTML = '';
-      chats.sort((a,b) => b.id - a.id).forEach(c => {
-        list.innerHTML += `
-        <div class="history-item flex justify-between items-center px-3 py-2.5 text-[13px] text-[var(--text-muted)] hover:bg-[var(--bg-input)] cursor-pointer" onclick="loadChat(${c.id})">
-          <span class="truncate flex-1 pr-2">${c.title || 'New Session'}</span>
-          <div class="history-actions" onclick="event.stopPropagation()">
-             <button onclick="renameChat(${c.id})" class="btn-svg" title="Rename"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
-             <button onclick="deleteChatAction(${c.id})" class="btn-svg hover:text-red-400" title="Delete"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
-          </div>
-        </div>`;
-      });
-    }
-
-    async function renameChat(id) {
-      let newName = prompt("Enter new session title:");
-      if(newName) {
-        let c = await getFromDB('chats', id); c.title = newName; await saveToDB('chats', c);
-        if(currentSession && currentSession.id === id) document.getElementById('current-chat-title').innerText = newName;
-        renderSidebar();
-      }
-    }
-
-    async function deleteChatAction(id) {
-      if(confirm("Delete this session?")) {
-        await deleteFromDB(id);
-        if(currentSession && currentSession.id === id) startNewChat();
-        renderSidebar();
-      }
-    }
-
-    // ==========================================
-    // 3. CHAT ENGINE (Gemini Styled Bubbles)
-    // ==========================================
-    const chatBox = document.getElementById('chat-box');
-    const chatInput = document.getElementById('chatInput');
-    const suggestBox = document.getElementById('suggestion-box');
-
-    function scrollToBottom() { setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 100); }
-    function handleEnter(e) { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
-
-    async function startNewChat() {
-      currentSession = { id: Date.now(), title: 'Universal SEO Task', history: [], activeTask: null, step: 0, data: { domain: '', title: '', desc: '', keywords: '', author: '', imgUrl: '' } };
-      chatBox.innerHTML = ''; document.getElementById('current-chat-title').innerText = 'New Session';
-      document.querySelectorAll('#canvas-wrapper').forEach(e => { e.classList.remove('flex'); e.classList.add('hidden'); }); updateEditor('');
-      if(window.innerWidth < 768) document.getElementById('sidebar').classList.remove('open');
-      
-      pushMsg('ai', `Hi ${user.name.split(' ')[0]}! What would you like to build today? Select a module to get started.`);
-      showChips(["Meta Tags & Canvas", "Robots.txt config", "XML Sitemap"]);
-    }
-
-    async function loadChat(id) {
-      const chat = await getFromDB('chats', id);
-      if(chat) {
-        currentSession = chat; chatBox.innerHTML = '';
-        currentSession.history.forEach(m => renderBubble(m.role, m.text, false));
-        document.getElementById('current-chat-title').innerText = chat.title;
-        if(window.innerWidth < 768) document.getElementById('sidebar').classList.remove('open');
-        scrollToBottom();
-      }
-    }
-
-    function pushMsg(role, text) {
-      currentSession.history.push({role, text}); renderBubble(role, text, true);
-      saveToDB('chats', currentSession); renderSidebar();
-    }
-
-    function renderBubble(role, text, animate = true) {
-      let animClass = animate ? 'animate-msg' : '';
-      let html = '';
-      
-      if(role === 'ai') {
-        // AI Bubble (Gemini Style: Avatar left, text right, transparent bg)
-        html = `
-        <div class="flex gap-4 max-w-4xl ${animClass}">
-          <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 border border-[var(--border-color)] text-[var(--text-main)] shadow-sm">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-          </div>
-          <div class="text-[15px] leading-relaxed text-[var(--text-main)] pt-1 flex-1">${text.replace(/\*\*(.*?)\*\*/g, '<b class="font-semibold text-white">$1</b>')}</div>
-        </div>`;
-      } else {
-        // User Bubble (ChatGPT Style: Gray rounded bubble aligned right)
-        html = `
-        <div class="flex gap-2 w-full justify-end ${animClass}">
-          <div class="bg-[var(--bubble-user)] rounded-3xl px-5 py-3 text-[15px] text-[var(--text-main)] max-w-[80%] leading-relaxed">${text}</div>
-        </div>`;
-      }
-      chatBox.insertAdjacentHTML('beforeend', html); scrollToBottom();
-    }
-
-    function showChips(arr) {
-      suggestBox.innerHTML = '';
-      arr.forEach(text => {
-        let btn = document.createElement('button'); btn.className = 'chip'; btn.innerText = text;
-        btn.onclick = () => { chatInput.value = text; chatInput.style.height = 'auto'; sendMessage(); };
-        suggestBox.appendChild(btn);
-      });
-      scrollToBottom();
-    }
-
-    // ==========================================
-    // 4. LOGIC ENGINE
-    // ==========================================
-    function sendMessage() {
-      const text = chatInput.value.trim();
-      if(!text) return;
-      pushMsg('user', text); chatInput.value = ''; chatInput.style.height = 'auto'; suggestBox.innerHTML = ''; 
-      
-      // Simulating "thinking" delay
-      setTimeout(() => processAI(text), 600);
-    }
-
-    function processAI(text) {
-      const t = text.toLowerCase(); let d = currentSession.data;
-
-      if (!currentSession.activeTask) {
-        if (t.includes('meta') || t.includes('canvas')) {
-          currentSession.activeTask = 'meta'; currentSession.step = 1;
-          pushMsg('ai', `Let's construct your Meta Tags. What is the **Title** of your website or page?`);
-          showChips(["MistaHub Official", "Skip / Auto"]);
-        } else if (t.includes('robots')) {
-          currentSession.activeTask = 'robots'; currentSession.step = 1;
-          pushMsg('ai', `Setting up Robots.txt. Should we allow or block AI scrapers (like GPTBot)?`);
-          showChips(["Allow All Bots", "Strictly Block AI"]);
-        } else if (t.includes('sitemap')) {
-          currentSession.activeTask = 'sitemap'; currentSession.step = 1;
-          pushMsg('ai', `Sitemap configuration. Please enter your primary **domain name** (e.g. mistahub.in).`);
-        } else {
-          pushMsg('ai', `I didn't quite catch that. Please select an option below.`);
-          showChips(["Meta Tags", "Robots.txt", "Sitemap.xml"]);
-        }
-        return;
-      }
-
-      if (currentSession.activeTask === 'meta') {
-        if (currentSession.step === 1) { 
-          d.title = t.includes('skip') ? 'MistaHub Apps' : text; currentSession.step++; 
-          pushMsg('ai', `Got it. Now provide a compelling **Description** for search engine snippets.`); showChips(["Premium developer ecosystem.", "Decide later"]); 
-        } 
-        else if (currentSession.step === 2) { 
-          d.desc = t.includes('later') ? 'A modern web platform.' : text; currentSession.step++; 
-          pushMsg('ai', `Excellent. Who is the **Author**, and what are the main **Keywords**? (e.g. Rahul | seo, tools)`); showChips([`${user.name} | seo, universal`, "Skip"]); 
-        }
-        else if (currentSession.step === 3) { 
-          if(text.includes('|')) { let p = text.split('|'); d.author = p[0].trim(); d.keywords = p[1].trim(); } else { d.author = user.name; d.keywords = text; }
-          currentSession.step++; 
-          
-          generateOGCanvas(d.title, d.desc, d.author);
-          pushMsg('ai', `I've generated a dynamic **OG Banner Preview** based on your inputs! Check the Workspace panel to view and download it.\n\nOnce you've hosted your image, paste the URL here. Or tap "Skip" to finalize code without an image.`); 
-          showChips(["Skip / No Image", "https://mysite.com/banner.png"]); 
-        }
-        else if (currentSession.step === 4) {
-          d.imgUrl = (t.includes('skip') || t.includes('no')) ? '' : text;
-          generateMetaCode(d); 
-          pushMsg('ai', `✅ **Meta Tags generation complete!** The code is ready in your Workspace.\n\nWhat would you like to do next?`);
-          currentSession.activeTask = null; showChips(["Robots.txt config", "XML Sitemap"]);
-        }
-      }
-      else if (currentSession.activeTask === 'robots') {
-        let blockAI = t.includes('block');
-        let code = `User-agent: *\nAllow: /\n\n# AI Scraper Rules\nContent-Signal: search=yes,ai-train=${blockAI ? 'no' : 'yes'}\n`;
-        if(blockAI) code += `User-agent: GPTBot\nDisallow: /\nUser-agent: ClaudeBot\nDisallow: /\n`;
-        updateEditor(code); pushMsg('ai', `Robots.txt configuration is ready in the Workspace. ✅`); currentSession.activeTask = null; showChips(["Meta Tags", "XML Sitemap"]);
-      }
-      else if (currentSession.activeTask === 'sitemap') {
-        let domain = text.replace('https://','').replace('/','');
-        let code = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>https://${domain}/</loc>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n</urlset>`;
-        updateEditor(code); pushMsg('ai', `Sitemap XML framework generated for ${domain}. ✅`); currentSession.activeTask = null; showChips(["Meta Tags", "Robots.txt config"]);
-      }
-    }
-
-    // ==========================================
-    // 5. EDITOR & DYNAMIC CANVAS
-    // ==========================================
-    function generateMetaCode(d) {
-      let code = `<!-- Universal SEO Meta Tags -->\n<title>${d.title}</title>\n<meta name="title" content="${d.title}">\n<meta name="description" content="${d.desc}">\n<meta name="keywords" content="${d.keywords}">\n<meta name="author" content="${d.author}">\n\n`;
-      code += `<!-- Open Graph (Facebook/LinkedIn) -->\n<meta property="og:type" content="website">\n<meta property="og:title" content="${d.title}">\n<meta property="og:description" content="${d.desc}">\n`;
-      if(d.imgUrl) code += `<meta property="og:image" content="${d.imgUrl}">\n`;
-      updateEditor(code);
-    }
+    // User bubble
+    const box = document.getElementById('chat-box');
+    box.innerHTML += `<div class="text-right text-sm bg-[#333] p-3 rounded-2xl ml-auto max-w-[80%]">${txt}</div>`;
+    input.value = '';
     
-    function updateEditor(code) { 
-      document.querySelectorAll('#desktopEditor').forEach(el => el.value = code); 
-      let mobEl = document.querySelector('#mobile-editor-container textarea');
-      if(mobEl) mobEl.value = code;
-    }
-    
-    function copyCode() { 
-      const el = window.innerWidth < 1024 ? document.querySelector('#mobile-editor-container textarea') : document.getElementById('desktopEditor'); 
-      el.select(); document.execCommand('copy'); 
-      if(navigator.vibrate) navigator.vibrate(50); 
-    }
-
-    let canvasSeed = 0;
-    function regenerateCanvas() { canvasSeed++; let d = currentSession.data; generateOGCanvas(d.title, d.desc, d.author); }
-
-    function generateOGCanvas(title, desc, author) {
-      document.querySelectorAll('#canvas-wrapper').forEach(el => { el.classList.remove('hidden'); el.classList.add('flex'); });
-      
-      const drawToCanvas = (canvasId) => {
-        const canvas = document.getElementById(canvasId); if(!canvas) return;
-        const ctx = canvas.getContext('2d'); const w = canvas.width, h = canvas.height;
-        
-        // Modern gradients
-        const themes = [ 
-          ['#000000', '#1f2937', '#3b82f6'], // Dark Blue
-          ['#020617', '#0f172a', '#10b981'], // Slate Emerald
-          ['#2e026d', '#15162c', '#a855f7']  // Deep Purple
-        ];
-        const theme = themes[canvasSeed % themes.length];
-        
-        let grd = ctx.createLinearGradient(0, 0, w, h);
-        grd.addColorStop(0, theme[0]); grd.addColorStop(1, theme[1]);
-        ctx.fillStyle = grd; ctx.fillRect(0, 0, w, h);
-        
-        // Decorative shapes (Subtle & modern)
-        ctx.globalAlpha = 0.3; ctx.fillStyle = theme[2];
-        ctx.beginPath(); ctx.arc(w, 0, 400, 0, 2*Math.PI); ctx.fill();
-        ctx.beginPath(); ctx.arc(0, h, 300, 0, 2*Math.PI); ctx.fill();
-        ctx.globalAlpha = 1.0;
-
-        // Clean Text Setup
-        ctx.fillStyle = '#ffffff'; ctx.font = 'bold 72px Inter, sans-serif'; 
-        wrapText(ctx, title || 'My Website', 120, h/2 - 30, w - 240, 85);
-        
-        ctx.fillStyle = '#9ca3af'; ctx.font = '36px Inter, sans-serif'; 
-        wrapText(ctx, desc || 'A powerful web platform.', 120, h/2 + 80, w - 240, 50);
-        
-        // Minimalist Author Badge
-        ctx.fillStyle = theme[2]; ctx.beginPath(); ctx.roundRect(120, h - 130, 40, 40, 8); ctx.fill();
-        ctx.fillStyle = '#ffffff'; ctx.font = 'bold 28px Inter, sans-serif'; 
-        ctx.fillText(author || 'Admin', 180, h - 100);
-      };
-
-      drawToCanvas('ogCanvas');
-      const mobCanvas = document.querySelector('#mobile-editor-container #ogCanvas');
-      if(mobCanvas) { mobCanvas.id = 'ogCanvasMobile'; drawToCanvas('ogCanvasMobile'); }
-    }
-
-    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-      let words = text.split(' '), line = '', cy = y;
-      for(let n = 0; n < words.length; n++) {
-        let testLine = line + words[n] + ' ';
-        if (ctx.measureText(testLine).width > maxWidth && n > 0) {
-          ctx.fillText(line, x, cy); line = words[n] + ' '; cy += lineHeight;
-        } else { line = testLine; }
+    // AI Logic
+    setTimeout(() => {
+      if(state.step === 'init') {
+        state.domain = txt;
+        state.step = 'meta';
+        box.innerHTML += `<div class="flex gap-3 text-sm">🤖 <div class="pt-1">Acha domain hai! Ab Meta Title bataiye.</div></div>`;
+      } else if (state.step === 'meta') {
+        state.title = txt;
+        const code = `<title>${state.title}</title>\n<meta name="description" content="Generated by MistaHub AI">`;
+        addCodeBlock('HTML', code);
+        box.innerHTML += `<div class="text-sm">Meta tags ready! Suggeestions: <button class="chip">Add OG Tags</button> <button class="chip">Add Schema</button></div>`;
       }
-      ctx.fillText(line, x, cy);
-    }
+    }, 500);
+  }
 
-    function downloadCanvas() {
-      const canvasId = window.innerWidth < 1024 ? 'ogCanvasMobile' : 'ogCanvas';
-      const canvas = document.getElementById(canvasId) || document.getElementById('ogCanvas');
-      if(canvas) {
-        const link = document.createElement('a');
-        link.download = `og-banner-${Date.now()}.png`; link.href = canvas.toDataURL('image/png'); link.click();
-      }
-    }
-
-    window.onload = bootApp;
-  </script>
+  function scrollToBottom() { document.getElementById('chat-box').scrollTop = 10000; }
+</script>
 </body>
 </html>
