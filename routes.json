@@ -1,6 +1,26 @@
 [
-  { "name": "Home", "url": "/", "icon": "🏠" },
-  { "name": "Mista App", "url": "/mista", "icon": "📱" },
-  { "name": "Bhaishayri API", "url": "/lib/bhaishayri", "icon": "📝" },
-  { "name": "Towin DB", "url": "/towin", "icon": "🎮" }
+  {
+    "title": "Bhaishayri API Docs",
+    "description": "Content delivery network aur database rules ka complete setup.",
+    "date": "June 22, 2026",
+    "thumbnail": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
+    "appIcon": "📝",
+    "url": "/bhaishayri.html"
+  },
+  {
+    "title": "Mista App Architecture",
+    "description": "Android app structure aur ad serving logic ka documentation.",
+    "date": "June 20, 2026",
+    "thumbnail": "",
+    "appIcon": "📱",
+    "url": "/mista.html"
+  },
+  {
+    "title": "Towin Rewards DB",
+    "description": "User tracking aur reward distribution ka secure schema.",
+    "date": "June 18, 2026",
+    "thumbnail": "https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?w=800&q=80",
+    "appIcon": "🎮",
+    "url": "/towin.html"
+  }
 ]
