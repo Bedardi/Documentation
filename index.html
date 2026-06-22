@@ -2,91 +2,113 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>MistaHub Dev Blog</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>MistaHub Official Docs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
   
-  <!-- Clean and Modern Theme -->
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/buble.css">
+  <!-- Humara auto-generator file load kar rahe hain -->
+  <script src="/sitemap.js"></script>
   
-  <!-- Custom CSS for Blog Feel -->
   <style>
-    /* Content width aur typography ko blog jaisa banana */
-    .markdown-section {
-      max-width: 800px;
-      margin: 0 auto;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.8;
-      font-size: 17px;
+    /* Modern Background */
+    body {
+      background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
-    .markdown-section h1 {
-      font-size: 2.8em;
-      font-weight: 800;
-      text-align: left;
-      margin-bottom: 0.2em;
+    
+    /* App Logo & Search Header */
+    .app-name {
+      font-weight: 900;
+      font-size: 24px;
+      color: #333;
     }
-    .markdown-section h2 {
-      border-bottom: none;
-      color: #2c3e50;
-      margin-top: 2em;
+
+    /* Glassmorphism Card Style (Facebook Post Style) */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: transform 0.2s;
     }
-    /* Blog style quotes */
-    .markdown-section blockquote {
-      border-left: 4px solid #0074d9;
-      background: #f8f9fa;
-      padding: 15px 20px;
-      border-radius: 4px;
-      font-style: italic;
+    .glass-card:hover {
+      transform: translateY(-5px);
     }
-    /* Date aur Tags styling */
-    .post-meta {
-      color: #7f8c8d;
-      font-size: 0.9em;
-      margin-bottom: 2em;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 10px;
+    
+    /* Buttons */
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .read-btn {
+      background: #007bff;
+      color: white !important;
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .share-btn {
+      background: rgba(255,255,255,0.6);
+      border: 1px solid #ccc;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div id="app">Loading MistaHub Blog...</div>
+  <div id="app">Loading MistaHub Docs...</div>
   
   <script>
-    window.$docsify = {
-      name: '<b>MistaHub</b>',
-      repo: '',
-      loadSidebar: true,
-      subMaxLevel: 2,
-      auto2top: true,
-      
-      // 1. CLEAN URLS ACTIVATE (Removes # from links)
-      routerMode: 'history',
-      
-      search: {
-        placeholder: '🔍 Search posts...',
-        noData: 'No Results Found!'
-      },
-      
-      // 2. BLOG PAGINATION (Next/Prev Buttons)
-      pagination: {
-        previousText: 'Pichla Post',
-        nextText: 'Agla Post',
-        crossChapter: true,
-        crossChapterText: true,
+    // Share Link Function (Native Mobile Share Support)
+    window.shareLink = function(path) {
+      const fullUrl = window.location.origin + path;
+      if (navigator.share) {
+        navigator.share({
+          title: 'MistaHub Docs',
+          text: 'Check out this documentation page!',
+          url: fullUrl
+        }).catch(err => console.log('Share failed:', err));
+      } else {
+        navigator.clipboard.writeText(fullUrl);
+        alert('Link Copied to Clipboard!');
       }
+    };
+
+    window.$docsify = {
+      name: 'MistaHub',
+      routerMode: 'history',
+      loadSidebar: true,
+      hideSidebar: false,
+      search: {
+        placeholder: '🔍 Search docs...',
+      },
+      // Ye function dynamically Sidebar banayega
+      plugins: [
+        function(hook, vm) {
+          hook.beforeEach(function(content) {
+            if (vm.route.file === 'README.md') {
+              // Agar user Home Page par hai, to Cards dikhao
+              return '# Welcome to MistaHub\n\n' + window.autoHomeCards;
+            } else if (vm.route.file === '_sidebar.md') {
+              // Sidebar ko sitemap array se inject karo
+              return window.autoSidebar;
+            }
+            return content;
+          });
+        }
+      ]
     }
   </script>
   
-  <!-- Core Scripts -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
-  
-  <!-- Pagination Plugin Script -->
-  <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
-  
-  <!-- Syntax Highlighting -->
-  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
 </body>
 </html>
