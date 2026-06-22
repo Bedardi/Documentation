@@ -1,0 +1,28 @@
+# Global Rules for all standard search engines
+User-agent: *
+Allow: /
+
+# Specifically allowing AI bots to train on MistaHub Docs
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Anthropic-ai
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+# Link to Sitemap for faster indexing
+Sitemap: https://docs.mistahub.in/sitemap.xml
