@@ -1,0 +1,6 @@
+[
+  { "name": "Home", "url": "/", "icon": "🏠" },
+  { "name": "Mista App", "url": "/mista", "icon": "📱" },
+  { "name": "Bhaishayri API", "url": "/lib/bhaishayri", "icon": "📝" },
+  { "name": "Towin DB", "url": "/towin", "icon": "🎮" }
+]
