@@ -3,23 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>MistaHub - Apps & Docs</title>
-  
-  <!-- Tailwind & Typography (Markdown styling ke liye zaroori hai) -->
+  <title>MistaHub Docs & Blog</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-  
-  <!-- Marked.js (Markdown to HTML) -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  
-  <!-- Highlight.js (Code blocks color karne ke liye) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans antialiased overflow-x-hidden min-h-screen flex flex-col">
+<body class="bg-gray-50 text-gray-800 font-sans antialiased overflow-x-hidden">
 
-  <!-- Header Section -->
   <header class="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-gray-200 z-40 px-4 py-3 shadow-sm">
     <div class="max-w-3xl mx-auto flex flex-col gap-3">
       <div class="flex justify-between items-center">
@@ -27,11 +15,10 @@
           <button onclick="toggleDrawer()" class="p-2 -ml-2 text-gray-600 hover:text-blue-600 transition-colors">
             <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path></svg>
           </button>
-          <a href="#" onclick="goHome()" class="text-xl font-black text-blue-700 tracking-tight">MistaHub</a>
+          <h1 class="text-xl font-black text-blue-700 tracking-tight">MistaHub</h1>
         </div>
       </div>
 
-      <!-- Search Bar -->
       <div class="relative w-full">
         <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Search apps, docs or posts..." class="w-full bg-gray-100 border border-gray-200 rounded-xl py-2.5 px-4 pl-11 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all shadow-inner text-sm">
         <svg class="absolute left-3.5 top-3 text-gray-400" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -39,7 +26,6 @@
     </div>
   </header>
 
-  <!-- Left Drawer Menu (With Icons & Names, NO Submenus) -->
   <div id="drawer" class="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 z-50 flex flex-col">
     <div class="p-5 border-b flex justify-between items-center bg-gray-50">
       <span class="font-black text-lg text-gray-800">Apps & Docs</span>
@@ -52,52 +38,31 @@
 
   <div id="overlay" onclick="toggleDrawer()" class="fixed inset-0 bg-black/60 hidden z-40 backdrop-blur-sm transition-opacity"></div>
 
-  <!-- Main Content Area -->
-  <main class="pt-[120px] pb-10 px-4 max-w-3xl mx-auto flex-1 w-full">
-    
-    <!-- View 1: Main Feed (Cards) -->
-    <div id="home-view">
-      <div id="feed-container" class="space-y-6"></div>
-      <div id="empty-state" class="hidden text-center py-10 text-gray-500">
-        <svg class="mx-auto mb-3 text-gray-300" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <p>No posts found matching your search.</p>
-      </div>
-    </div>
+  <main class="pt-[120px] pb-10 px-4 max-w-3xl mx-auto min-h-screen">
+    <div id="feed-container" class="space-y-6"></div>
 
-    <!-- View 2: Markdown Document Reader -->
-    <div id="doc-view" class="hidden">
-      <button onclick="goHome()" class="mb-6 flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
-        Back to Apps
-      </button>
-      
-      <div id="doc-loader" class="hidden flex justify-center py-10">
-        <svg class="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-      </div>
-      
-      <!-- Generated Markdown Content goes here -->
-      <article id="doc-content" class="prose prose-blue prose-slate max-w-none bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-200"></article>
+    <div id="empty-state" class="hidden text-center py-10 text-gray-500">
+      <svg class="mx-auto mb-3 text-gray-300" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <p>No posts found matching your search.</p>
     </div>
-
   </main>
 
   <script>
     let postsData = [];
 
-    // 1. Fetch JSON (routes.json)
+    // 1. Fetch JSON and Initialize
     async function loadData() {
       try {
         const response = await fetch('/routes.json');
         postsData = await response.json();
         renderFeed(postsData);
         renderDrawer(postsData);
-        handleRouting(); // Check if user opened a direct link
       } catch (error) {
-        document.getElementById('feed-container').innerHTML = '<p class="text-red-500 text-center py-10 font-bold">Error: Cannot load routes.json. Make sure the file exists.</p>';
+        document.getElementById('feed-container').innerHTML = '<p class="text-red-500 text-center py-10">Error loading data. Please check routes.json</p>';
       }
     }
 
-    // 2. Render Cards Feed
+    // 2. Render Main Feed Cards
     function renderFeed(data) {
       const container = document.getElementById('feed-container');
       const emptyState = document.getElementById('empty-state');
@@ -111,28 +76,34 @@
       emptyState.classList.add('hidden');
       container.innerHTML = data.map(post => `
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+          
           ${post.thumbnail ? `<img src="${post.thumbnail}" alt="${post.title}" class="w-full h-40 object-cover border-b border-gray-100">` : ''}
+          
           <div class="p-4 flex items-center gap-4">
+            
             <div class="w-14 h-14 rounded-xl bg-blue-50 flex items-center justify-center text-3xl flex-shrink-0 shadow-inner">
               ${post.appIcon}
             </div>
+            
             <div class="flex-1 min-w-0">
               <h2 class="text-lg font-bold text-gray-900 truncate" title="${post.title}">${post.title}</h2>
               <p class="text-sm text-gray-500 line-clamp-1 mt-0.5" title="${post.description}">${post.description}</p>
             </div>
-            <a href="#${post.id}" class="flex-shrink-0 bg-gray-900 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl text-sm transition-colors shadow-sm">
-              Open Docs
+            
+            <a href="${post.url}" class="flex-shrink-0 bg-gray-900 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl text-sm transition-colors shadow-sm">
+              Open
             </a>
+            
           </div>
         </div>
       `).join('');
     }
 
-    // 3. Render Drawer Menu (Icons + Name only)
+    // 3. Render Drawer Menu
     function renderDrawer(data) {
       const drawerMenu = document.getElementById('drawer-menu');
       drawerMenu.innerHTML = data.map(post => `
-        <a href="#${post.id}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 transition-colors text-gray-700 hover:text-blue-600" onclick="toggleDrawer(true)">
+        <a href="${post.url}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 transition-colors text-gray-700 hover:text-blue-600">
           <span class="text-2xl">${post.appIcon}</span>
           <div class="flex-1">
             <h3 class="font-bold text-sm leading-tight">${post.title}</h3>
@@ -142,9 +113,8 @@
       `).join('');
     }
 
-    // 4. Handle Searching (Filters Feed and shows Home View)
+    // 4. Search Logic
     function handleSearch() {
-      goHome(false); // Make sure we are in feed view
       const query = document.getElementById('searchInput').value.toLowerCase();
       const filtered = postsData.filter(post => 
         post.title.toLowerCase().includes(query) || 
@@ -156,13 +126,12 @@
     // 5. Drawer Toggle Logic
     const drawer = document.getElementById('drawer');
     const overlay = document.getElementById('overlay');
-    
-    function toggleDrawer(forceClose = false) {
+    function toggleDrawer() {
       const isClosed = drawer.classList.contains('-translate-x-full');
-      if (isClosed && !forceClose) {
+      if (isClosed) {
         drawer.classList.remove('-translate-x-full');
         overlay.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; 
+        document.body.style.overflow = 'hidden'; // Stop background scroll
       } else {
         drawer.classList.add('-translate-x-full');
         overlay.classList.add('hidden');
@@ -170,55 +139,8 @@
       }
     }
 
-    // 6. Routing (Switch between Feed and Markdown Reader)
-    function handleRouting() {
-      const hash = window.location.hash.substring(1); // Gets 'payment' from '#payment'
-      
-      if (hash && hash !== '') {
-        loadMarkdown(hash);
-      } else {
-        goHome(false);
-      }
-    }
-
-    function goHome(clearHash = true) {
-      document.getElementById('home-view').classList.remove('hidden');
-      document.getElementById('doc-view').classList.add('hidden');
-      if (clearHash) {
-        window.history.pushState('', document.title, window.location.pathname); // clear URL #
-      }
-    }
-
-    // 7. Load Markdown from "lib" folder
-    async function loadMarkdown(id) {
-      document.getElementById('home-view').classList.add('hidden');
-      document.getElementById('doc-view').classList.remove('hidden');
-      document.getElementById('doc-content').style.display = 'none';
-      document.getElementById('doc-loader').style.display = 'flex';
-
-      try {
-        // Fetch from 'lib' folder
-        const response = await fetch(`/lib/${id}.md`);
-        if (!response.ok) throw new Error('File not found');
-        
-        const markdownText = await response.text();
-        document.getElementById('doc-content').innerHTML = marked.parse(markdownText);
-        hljs.highlightAll(); // Code highlighting
-      } catch (error) {
-        document.getElementById('doc-content').innerHTML = `
-          <h2 class="text-red-500">File not found</h2>
-          <p>The documentation file <b>lib/${id}.md</b> is missing.</p>
-        `;
-      }
-
-      document.getElementById('doc-loader').style.display = 'none';
-      document.getElementById('doc-content').style.display = 'block';
-    }
-
-    // Listeners
-    window.addEventListener('hashchange', handleRouting);
+    // Start App
     loadData();
-
   </script>
 </body>
 </html>
